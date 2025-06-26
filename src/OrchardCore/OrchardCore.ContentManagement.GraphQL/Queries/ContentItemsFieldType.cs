@@ -222,17 +222,6 @@ public class ContentItemsFieldType : FieldType
         return contentItemsQuery;
     }
 
-    private static VersionOptions GetVersionOption(PublicationStatusEnum status)
-    {
-        return status switch
-        {
-            PublicationStatusEnum.Published => VersionOptions.Published,
-            PublicationStatusEnum.Draft => VersionOptions.Draft,
-            PublicationStatusEnum.Latest => VersionOptions.Latest,
-            _ => VersionOptions.Published,
-        };
-    }
-
     private static IQuery<ContentItem, ContentItemIndex> FilterContentType(IQuery<ContentItem, ContentItemIndex> query, IResolveFieldContext context)
     {
         ArgumentNullException.ThrowIfNull(context);
@@ -427,7 +416,7 @@ public class ContentItemsFieldType : FieldType
 
                 foreach (var property in orderByArguments)
                 {
-                    var direction = (OrderByDirection)property.Value.Value<int>();
+                    var direction = property.Value.GetEnumValue<OrderByDirection>();
 
                     Expression<Func<ContentItemIndex, object>> selector = null;
 
